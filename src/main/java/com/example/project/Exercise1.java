@@ -9,6 +9,8 @@ public class Exercise1 {
 
         obj.tb = new HashLinearProbing(100);
 
+        
+
         obj.insertarPersona(new Persona("12345678", "Jorge Chamby"));
         obj.insertarPersona(new Persona("12345679", "Juan Perez"));
 
@@ -17,18 +19,42 @@ public class Exercise1 {
         obj.eliminarPersona("12345678");
 
         System.out.println(obj.encontrarPersona("12345678"));
+
+        
     }
 
     public void insertarPersona(Persona obj){
         // Llamar al metodo 'insertHash' modificado
+        
+        tb.insertHash(obj);
+        
     }
 
     public void eliminarPersona(String dni){
         // Llamar al metodo 'deleteHash' modificado
+        
+        tb.deleteHash(Integer.parseInt(dni));
     }
 
     // Retorna NULL quando no se encontro el dni, y el nombre de la persona si lo encontro
     public String encontrarPersona(String dni){
-        return null;
-    }    
+        int hash = tb.findHash(Integer.parseInt(dni));
+        
+
+        if (hash == -1){
+            return null;
+        }
+        
+        return tb.getBuckets()[hash].nombre ;
+    }
+
+    public void mostrarHash(){
+        tb.displayHashtable();
+    }
+    
+
+
+    public Exercise1(){
+        this.tb = new HashLinearProbing(100);
+    }
 }
