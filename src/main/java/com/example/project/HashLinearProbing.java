@@ -4,15 +4,23 @@ import java.util.Random;
 
 public class HashLinearProbing {
     private int hsize; // tamano de la tabla hash
-    private Integer[] buckets; // array que representa la tabla hash
-    private Integer AVAILABLE;
+    private Persona[] buckets; // array que representa la tabla hash
+    private Persona AVAILABLE;
     private int size; // cantidad de elementos en la tabla hash
 
     public HashLinearProbing(int hsize) {
-        this.buckets = new Integer[hsize];
+        this.setBuckets(new Persona[hsize]);
         this.hsize = hsize;
-        this.AVAILABLE = Integer.MIN_VALUE;
+        this.AVAILABLE = new Persona(Integer.MIN_VALUE + "", "sin nombre");
         this.size = 0;
+    }
+
+    public Persona[] getBuckets() {
+        return buckets;
+    }
+
+    public void setBuckets(Persona[] buckets) {
+        this.buckets = buckets;
     }
 
     public int hashing(int key) {
@@ -23,8 +31,11 @@ public class HashLinearProbing {
         return hash;
     }
 
-    public void insertHash(int key) {
-        Integer wrappedInt = key;
+    /**
+     * @param key
+     */
+    public void insertHash(Persona persona) {
+        Integer key = Integer.parseInt(persona.DNI);
         int hash = hashing(key);
 
         if (isFull()) {
@@ -33,9 +44,10 @@ public class HashLinearProbing {
         }
 
         for (int i = 0; i < hsize; i++) {
-            if (buckets[hash] == null || buckets[hash] == AVAILABLE) {
-                buckets[hash] = wrappedInt;
+            if ( getBuckets()[hash] == null || getBuckets()[hash] == AVAILABLE) {
+                getBuckets()[hash] = persona;
                 size++;
+                System.out.println("clave añadida con exito");
                 return;
             }
 
@@ -57,8 +69,8 @@ public class HashLinearProbing {
         }
 
         for (int i = 0; i < hsize; i++) {
-            if (buckets[hash] != null && buckets[hash].equals(wrappedInt)) {
-                buckets[hash] = AVAILABLE;
+            if (getBuckets()[hash] != null && getBuckets()[hash].DNI.equals(wrappedInt+"")) {
+                getBuckets()[hash] = AVAILABLE;
                 size--;
                 return;
             }
@@ -74,10 +86,10 @@ public class HashLinearProbing {
 
     public void displayHashtable() {
         for (int i = 0; i < hsize; i++) {
-            if (buckets[i] == null || buckets[i] == AVAILABLE) {
+            if (getBuckets()[i] == null || getBuckets()[i] == AVAILABLE) {
                 System.out.println("Celda " + i + ": Vacia");
             } else {
-                System.out.println("Celda " + i + ": " + buckets[i].toString());
+                System.out.println("Celda " + i + ": " + getBuckets()[i].toString());
             }
         }
     }
@@ -93,8 +105,8 @@ public class HashLinearProbing {
 
         for (int i = 0; i < hsize; i++) {
             try {
-                if (buckets[hash].equals(wrappedInt)) {
-                    buckets[hash] = AVAILABLE;
+                if (getBuckets()[hash].DNI.equals(wrappedInt+"")) {
+                    //buckets[hash] = AVAILABLE;
                     return hash;
                 }
             } catch (Exception E) {
@@ -108,7 +120,7 @@ public class HashLinearProbing {
         }
         System.out.println("Clave " + key + " no encontrada!");
         return -1;
-    }    
+    }        
    
     public boolean isFull() {        
         return size == hsize;
@@ -117,7 +129,7 @@ public class HashLinearProbing {
     public boolean isEmpty() {
         boolean response = true;
         for (int i = 0; i < hsize; i++) {
-            if (buckets[i] != null) {
+            if (getBuckets()[i] != null) {
                 response = false;
                 break;
             }
@@ -125,13 +137,16 @@ public class HashLinearProbing {
         return response;
     }
 
+    /**
+     * @param args
+     */
     public static void main (String[] args){
         HashLinearProbing tb = new HashLinearProbing(10);
 
         Random rd = new Random();
 
         for(int i = 0; i < 5; i++){
-            tb.insertHash(rd.nextInt(100));
+            //tb.insertHash(rd.nextInt(100));
         }
 
         tb.displayHashtable();        
